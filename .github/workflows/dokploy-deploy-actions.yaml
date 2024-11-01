@@ -1,26 +1,45 @@
 name: Dokploy Deploy
 
-on:         
+on:
   workflow_call:
+    inputs:
+      APPLICATION_NAME:
+        type: string
+        required: true
+      PROJECT_NAME:
+        type: string
+        required: true
     secrets:
       DOKPLOY_HOST:
-        required: true  
+        required: true
       DOKPLOY_TOKEN:
-        required: true  
-      APPLICATION_ID:
-        required: true  
-        
+        required: true
+      
+
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Deploy to Dokploy
-              run: |
-                curl -X 'POST' \
-                  'https://${{ secrets.DOKPLOY_HOST }}/api/application.deploy' \
-                  -H 'accept: application/json' \
-                  -H 'Content-Type: application/json' \
-                  -H "Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}" \
-                  -d '{
-                  "applicationId": "${{ secrets.APPLICATION_ID }}"
-                }'
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve project list
+        id: retrieve-project-list
+        run: |
+          curl -X 'GET' \
+          'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' \
+          -H 'accept: application/json'
+          -H 'Authorization: Bearer <token>'
+
+      - name: Get applicationId from project list
+        id: retrieve-application-id
+        run: |
+            echo "APPLICATION_ID=$(echo ${{ steps.retrieve-project-list.outputs.stdout }} | jq -r '.[] | select(.name == "${{ inputs.PROJECT_NAME }}") | .applications[] | select(.name == "${{ inputs.APPLICATION_NAME }}") | .applicationId')" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Dokploy
+        run: |
+          curl -X 'POST' \
+            'https://${{ secrets.DOKPLOY_HOST }}/api/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}" \
+            -d '{
+            "applicationId": "${{ steps.retrieve-application-id.outputs.APPLICATION_ID }}"
+          }'
