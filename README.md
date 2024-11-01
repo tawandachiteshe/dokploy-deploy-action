@@ -21,7 +21,7 @@ on:
 
 jobs:
   dokploy_deploy:
-    uses: ./.github/workflows/dokploy-deploy-actions.yaml
+    uses: jmischler72/dokploy-deploy-actions/.github/workflows/dokploy-deploy-actions.yaml@main
     secrets: 
       DOKPLOY_HOST: ${{ secrets.DOKPLOY_HOST }}
       DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
@@ -40,7 +40,7 @@ on:
 
 jobs:
   dokploy_deploy:
-    uses: ./.github/workflows/dokploy-deploy-actions.yaml
+    uses: jmischler72/dokploy-deploy-actions/.github/workflows/dokploy-deploy-actions.yaml@main
     secrets: inherit
 ```
 
