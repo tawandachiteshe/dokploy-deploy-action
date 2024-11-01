@@ -1,6 +1,6 @@
 # Dokploy Deploy Actions
 
-This repository contains GitHub Actions for deploying projects using Dokploy.
+This repository contains GitHub Actions for deploying applications using Dokploy.
 
 ## Features
 
