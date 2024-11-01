@@ -1,4 +1,4 @@
-# Dokploy Deploy Actions
+# Dokploy Deploy Action
 
 This repository contains GitHub Actions for deploying applications using Dokploy.
 
@@ -25,7 +25,10 @@ jobs:
     secrets: 
       DOKPLOY_HOST: ${{ secrets.DOKPLOY_HOST }}
       DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
-      APPLICATION_ID: ${{ secrets.APPLICATION_ID }}
+    with:
+      PROJECT_NAME: project-name
+      APPLICATION_NAME: application-name
+    
 ```
 
 Or for ease of use
@@ -42,16 +45,18 @@ jobs:
   dokploy_deploy:
     uses: jmischler72/dokploy-deploy-actions/.github/workflows/dokploy-deploy-actions.yaml@main
     secrets: inherit
+    with:
+      PROJECT_NAME: project-name
+      APPLICATION_NAME: application-name
 ```
 
 ## Secrets
 
 - `DOKPLOY_HOST`: The host ip or domain of your dokploy instance.
 - `DOKPLOY_TOKEN`: Create an API token in your profile settings on Dokploy
-- `APPLICATION_ID`: Retrieve Application ID by running
-  ```bash
-  curl -X 'GET' \
-    'https://your-domain/api/project.all' \
-    -H 'accept: application/json' \
-    -H 'Authorization: Bearer <token>'
-  ```
+
+## Inputs
+
+- `PROJECT_NAME`: The name of the project in which the application you want to deploy is in
+- `APPLICATION_NAME`: The name of the application you want to deploy
+
