@@ -26,7 +26,7 @@ jobs:
           curl -X 'GET' \
           'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' \
           -H 'accept: application/json' \
-          -H 'Authorization: Bearer <token>' \
+          -H 'Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}' \
 
       - name: Get applicationId from project list
         id: retrieve-application-id
