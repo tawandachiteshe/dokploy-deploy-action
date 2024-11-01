@@ -11,5 +11,5 @@ inputs:
         required: true
         default: "tetrarena"
 branding:
-  icon: "tool"
+  icon: "box"
   color: "gray-dark"
