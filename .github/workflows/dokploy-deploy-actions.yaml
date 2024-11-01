@@ -23,10 +23,7 @@ jobs:
       - name: Retrieve project list
         id: retrieve-project-list
         run: |
-          PROJECT_LIST=$(curl -X 'GET' \
-          'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' \
-          -H 'accept: application/json' \
-          -H 'Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}' \)[0]
+          PROJECT_LIST=$(curl -X 'GET' 'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' -H 'accept: application/json' -H 'Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}')[0]
           echo "::add-mask::$PROJECT_LIST"
           echo PROJECT_LIST=$PROJECT_LIST >> $GITHUB_ENV  
 
