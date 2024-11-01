@@ -20,18 +20,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Retrieve project list
-        id: retrieve-project-list
+      - name: Retrieve application id
+        id: retrieve-application-id
         run: |
           PROJECT_LIST=$(curl -X 'GET' 'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' -H 'accept: application/json' -H 'Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}')
           echo "::add-mask::$PROJECT_LIST"
-          echo PROJECT_LIST=$PROJECT_LIST >> $GITHUB_ENV  
-
-
-      - name: Get applicationId from project list
-        id: retrieve-application-id
-        run: |
-            echo "::add-mask::$PROJECT_LIST[0] APPLICATION_ID=$(echo $PROJECT_LIST[0] | jq -r '.[] | select(.name == "${{ inputs.PROJECT_NAME }}") | .applications[] | select(.name == "${{ inputs.APPLICATION_NAME }}") | .applicationId')" >> "$GITHUB_OUTPUT"
+          echo "APPLICATION_ID=$(echo $PROJECT_LIST | jq -r '.[] | select(.name == "${{ inputs.PROJECT_NAME }}") | .applications[] | select(.name == "${{ inputs.APPLICATION_NAME }}") | .applicationId')" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to Dokploy
         run: |
