@@ -1,0 +1,12 @@
+name: Test Workflow
+
+on:
+    workflow_dispatch:
+
+jobs:
+    call-other-workflow:
+        secrets: inherit
+        uses: ./.github/workflows/dokploy-deploy-actions.yaml
+        with:
+            PROJECT_NAME: tetrarena
+            APPLICATION_NAME: server
