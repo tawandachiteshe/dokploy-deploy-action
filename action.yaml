@@ -2,6 +2,13 @@ name: "Tawanda Chiteshe Dokploy Deploy Action"
 description: "Deploy an application to Dokploy"
 author: "tawandachiteshe"
 inputs:
+  DOKPLOY_URL:
+    description: "The URL of the Dokploy instance"
+    required: true
+    default: "dokploy.com"
+  DOKPLOY_API_KEY:
+    description: "The API key to authenticate with Dokploy"
+    required: true
   APPLICATION_NAME:
     description: "The name of the application to deploy"
     required: true
