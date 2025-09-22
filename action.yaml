@@ -1,4 +1,4 @@
-name: "Dokploy Deploy Action"
+name: "Tawanda Chiteshe Dokploy Deploy Action"
 description: "Deploy an application to Dokploy"
 author: "tawandachiteshe"
 inputs:
