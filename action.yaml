@@ -31,6 +31,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install JQ
+      shell: bash
+      run: |
+        if ! command -v jq &>/dev/null; then
+          sudo apt-get -qq update
+          sudo apt-get -qq install -y jq
+        fi
     - name: Retrieve Application ID
       shell: bash
       id: retrieve-application-id
