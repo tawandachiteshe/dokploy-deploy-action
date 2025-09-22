@@ -2,40 +2,52 @@ name: "Dokploy Deploy Action"
 description: "Deploy an application to Dokploy"
 author: "jmischler72"
 inputs:
-    APPLICATION_NAME:
-        description: "The name of the application to deploy"
-        required: true
-        default: "application"
-    PROJECT_NAME:
-        description: "The name of the project to deploy"
-        required: true
-        default: "project"
-    DOKPLOY_HOST:
-        description: "The host of the Dokploy instance"
-        required: true
-    DOKPLOY_TOKEN:
-        description: "The token to authenticate with Dokploy"
-        required: true
-    
-runs:
-    using: "composite"
-    steps:
-        - name: Retrieve application id
-        id: retrieve-application-id
-        run: |
-          PROJECT_LIST=$(curl -X 'GET' 'https://${{ secrets.DOKPLOY_HOST }}/api/project.all' -H 'accept: application/json' -H 'Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}')
-          echo "::add-mask::$PROJECT_LIST"
-          echo "APPLICATION_ID=$(echo $PROJECT_LIST | jq -r '.[] | select(.name == "${{ inputs.PROJECT_NAME }}") | .applications[] | select(.name == "${{ inputs.APPLICATION_NAME }}") | .applicationId')" >> "$GITHUB_OUTPUT"
+  APPLICATION_NAME:
+    description: "The name of the application to deploy"
+    required: true
+    default: "application"
+  PROJECT_NAME:
+    description: "The name of the project to deploy"
+    required: true
+    default: "project"
+  ENVIROMENT_NAME:
+    description: "The name of the project to deploy"
+    required: true
+    default: "production"
+  DOKPLOY_HOST:
+    description: "The host of the Dokploy instance"
+    required: true
+  DOKPLOY_TOKEN:
+    description: "The token to authenticate with Dokploy"
+    required: true
 
-      - name: Deploy to Dokploy
-        run: |
-          curl -X 'POST' \
-            'https://${{ secrets.DOKPLOY_HOST }}/api/application.deploy' \
-            -H 'accept: application/json' \
-            -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${{ secrets.DOKPLOY_TOKEN }}" \
-            -d '{ "applicationId": "${{ steps.retrieve-application-id.outputs.APPLICATION_ID }}" }'
+runs:
+  using: "composite"
+  steps:
+    - name: Retrieve Application ID
+      shell: bash
+      id: retrieve-application-id
+      run: |
+        PROJECT_LIST=$(curl -X 'GET' 'https://${{ secrets.DOKPLOY_URL }}/api/project.all' -H 'accept: application/json' -H 'x-api-key: ${{ secrets.DOKPLOY_API_KEY }}')
+        echo "::add-mask::$PROJECT_LIST"
+        echo "APPLICATION_ID=$(echo $PROJECT_LIST | jq -r '.[] | select(.name == "${{ inputs.PROJECT_NAME }}") | .environments[] | select(.name == "${{ inputs.ENVIROMENT_NAME }}")  | .applications[] | select(.name == "${{ inputs.APPLICATION_NAME }}") | .applicationId')" >> "$GITHUB_OUTPUT"
+    - name: Get Last Commit Message
+      id: last-commit-message
+      shell: bash
+      run: |
+        LAST_COMMIT_MESSAGE="$(git log -1 --pretty=format:%s)"
+        echo "LAST_COMMIT_MESSAGE=${LAST_COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
+    - name: Deploy to Dokploy
+      shell: bash
+      run: |
+        curl -X 'POST' \
+          'https://${{secrets.DOKPLOY_URL}}/api/application.deploy' \
+          -H 'accept: application/json' \
+          -H 'Content-Type: application/json' \
+          -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+        -d '{ "applicationId": "${{ steps.retrieve-application-id.outputs.APPLICATION_ID }}", "title": "${{ steps.last-commit-message.outputs.LAST_COMMIT_MESSAGE }}", "description": "${{ github.sha }}"   }'
 
 branding:
   icon: "box"
   color: "gray-dark"
+
