@@ -1,6 +1,6 @@
 name: "Dokploy Deploy Action"
 description: "Deploy an application to Dokploy"
-author: "jmischler72"
+author: "tawandachiteshe"
 inputs:
   APPLICATION_NAME:
     description: "The name of the application to deploy"

@@ -22,12 +22,13 @@ on:
 
 jobs:
   dokploy_deploy:
-    uses: jmischler72/dokploy-deploy-actions@main
+    uses: tawandachiteshe/dokploy-deploy-actions@main
     with:
       PROJECT_NAME: project-name
       APPLICATION_NAME: application-name
       DOKPLOY_HOST: ${{ secrets.DOKPLOY_HOST }}
       DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
+      ENVIROMENT_NAME: production
     
 ```
 
@@ -37,3 +38,4 @@ jobs:
 - `APPLICATION_NAME`: The name of the application you want to deploy
 - `DOKPLOY_HOST`: The host ip or domain of your dokploy instance.
 - `DOKPLOY_TOKEN`: Create an API token in your profile settings on Dokploy
+- `ENVIROMENT_NAME`: The name of the environment you want to deploy to
