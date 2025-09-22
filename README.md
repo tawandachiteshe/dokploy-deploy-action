@@ -24,10 +24,10 @@ jobs:
   dokploy_deploy:
     uses: tawandachiteshe/dokploy-deploy-actions@main
     with:
-      PROJECT_NAME: project-name
-      APPLICATION_NAME: application-name
-      DOKPLOY_HOST: ${{ secrets.DOKPLOY_HOST }}
-      DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
+      PROJECT_NAME: "Project Name"
+      APPLICATION_NAME: "Application Name"
+      DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+      DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
       ENVIROMENT_NAME: production
     
 ```
